@@ -3,6 +3,8 @@ import json
 import subprocess
 import re
 import zipfile
+import zlib
+import base64
 import hashlib
 from datetime import datetime
 
@@ -111,6 +113,12 @@ def unzipFile(inFileFullPath,outDirFullPath):
             quickFileWrite(path,theZip.read(fileNameZipPath),'wb')
     theZip.close()
     return 0
+
+def pPack(data):
+    return base64.b64encode(zlib.compress(data))
+
+def pUnpack(package):
+    return zlib.decompress(base64.b64decode(package))
 
 def createDirectory(path):
     if os.path.exists(path)!=True:

@@ -116,6 +116,17 @@ class Test_fileOperations(unittest.TestCase):
         
         pUtils.removeDirectory(testDirFullPath)
         self.assertEqual(os.path.exists(testDirFullPath),False)
+        
+
+class Test_packingFunctions(unittest.TestCase):
+    
+    def setUp(self):
+       pass
+
+    def test_packingFunctions_1(self):
+        data = 'I am a random string to be used for this test!'
+        self.assertEqual(pUtils.pUnpack(pUtils.pPack(data)),data)
+
 
 #TODO increase coverage by adding run programs (instead of only shell commands) cases
 class Test_runProgram(unittest.TestCase):
