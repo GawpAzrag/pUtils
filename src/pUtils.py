@@ -7,15 +7,15 @@ import hashlib
 from datetime import datetime
 
 def quickFileRead(fileFullPath,mode='rt'):
-    with open(fileFullPath,mode) as file:
-        data = file.read()
+    with open(fileFullPath,mode) as inFile:
+        data = inFile.read()
     return data
 
 def quickFileWrite(fileFullPath,data,mode='wt'):
-    dir = os.path.dirname(fileFullPath)
-    if dir!='': createDirectory(dir)
-    with open(fileFullPath,mode) as file:
-        file.write(data)
+    dirFullPath = os.path.dirname(fileFullPath)
+    if dirFullPath!='': createDirectory(dirFullPath)
+    with open(fileFullPath,mode) as outFile:
+        outFile.write(data)
 
 def dateTimeToString(dateTimeObj,formatTypeID=0):
     if formatTypeID==0:
@@ -55,7 +55,7 @@ def calculateDuration(start,end):
     return delta
 
 def runProgram(programFullPath,shell=False):
-    s = subprocess.Popen(programFullPath, stdout=subprocess.PIPE,shell=shell)
+    s = subprocess.Popen(programFullPath, stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=shell)
     output, errorCode = s.communicate()
     returnCode = s.returncode
     return {'output':output,'errorCode':errorCode,'returnCode':returnCode}
@@ -120,9 +120,9 @@ def createDirectory(path):
         return 1
 
 def removeDirectory(path):
-    list = os.listdir(path)
-    list = map(lambda s:os.path.join(path,s),list)
-    for item in list:
+    itemList = os.listdir(path)
+    itemList = map(lambda s:os.path.join(path,s),itemList)
+    for item in itemList:
         if os.path.isfile(item):
             os.remove(item)
         else:
@@ -130,23 +130,23 @@ def removeDirectory(path):
     os.rmdir(path)
 
 def emptyDirectory(path):
-    list = os.listdir(path)
-    list = map(lambda s:os.path.join(path,s),list)
-    for item in list:
+    itemList = os.listdir(path)
+    itemList = map(lambda s:os.path.join(path,s),itemList)
+    for item in itemList:
         if os.path.isfile(item):
             os.remove(item)
         else:
             removeDirectory(item)
 
-def removeDuplicates(list):
-    list.sort()
-    list2 = []
+def removeDuplicates(itemList):
+    itemList.sort()
+    itemList2 = []
     old=''
-    for l in list:
+    for l in itemList:
         if old!=l:
-            list2 = list2 +[l]
+            itemList2 = itemList2 +[l]
             old=l
-    return list2
+    return itemList2
 
 def removeEntries(mainList,removeList):
     l=[]
@@ -155,14 +155,14 @@ def removeEntries(mainList,removeList):
                 l.append(mainItem)
     return l
 
-def filterListByRegex(list, regex):
-    list2 = []
+def filterListByRegex(itemList, regex):
+    itemList2 = []
     r = re.compile(regex)
-    for item in list:
+    for item in itemList:
         t = r.search(item)
         if t!=None:
-            list2.append(item)
-    return list2
+            itemList2.append(item)
+    return itemList2
     
 def replaceStrings(string,**kwargs):
     for i,j in kwargs.iteritems():

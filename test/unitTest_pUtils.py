@@ -72,6 +72,7 @@ class Test_getTimeStamp(unittest.TestCase):
         pUtils.getTimeStamp(1,True)
         pUtils.getTimeStamp(1,False)
         
+
         
 class Test_fileOperations(unittest.TestCase):
     
@@ -123,12 +124,11 @@ class Test_runProgram(unittest.TestCase):
        pass
 
     def test_runProgram_1(self):
-        t = pUtils.runProgram('dir',shell=True)
+        t = pUtils.runProgram('ls',shell=True)
         t['output']
-        self.assertEqual(t['errorCode'],None)
+        t['errorCode']
         self.assertEqual(t['returnCode'],0)
-        self.assertRaises(Exception,pUtils.runProgram,'dir',shell=False)
-
+       
 class Test_removeDuplicates(unittest.TestCase):
 
     def test_removeDuplicates_1(self):
@@ -153,10 +153,10 @@ class Test_filterListByRegex(unittest.TestCase):
 if __name__ == '__main__':
     import inspect
     import sys
-    list = inspect.getmembers(sys.modules[__name__], inspect.isclass)
+    itemList = inspect.getmembers(sys.modules[__name__], inspect.isclass)
     
     suiteList = []
-    for item in list:
+    for item in itemList:
         suiteList.append(unittest.TestLoader().loadTestsFromTestCase(item[1]))
     allTests = unittest.TestSuite(suiteList)
     unittest.TextTestRunner(verbosity=2).run(allTests)
