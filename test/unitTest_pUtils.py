@@ -155,11 +155,24 @@ class Test_filterListByRegex(unittest.TestCase):
     def test_filterListByRegex_1(self):
         self.assertEqual(pUtils.filterListByRegex(['abc','etc','abd'],r'.?.?c'),['abc','etc'])
 
-class Test_filterListByRegex(unittest.TestCase):
+class Test_replaceStrings(unittest.TestCase):
 
-    def test_filterListByRegex_1(self):
+    def test_replaceStrings_1(self):
         d = {'<w1>':'World','<w2>':'again'}
         self.assertEqual(pUtils.replaceStrings('Hello <w1> ! ... <w2> and <w2>',**d),'Hello World ! ... again and again')
+
+class Test_formatHex(unittest.TestCase):
+
+    def test_Test_formatHex_1(self):
+        data = bytearray('\x00\x01\x02\x03\xFF')
+        self.assertEqual(pUtils.formatHex(data),'00 01 02 03 FF')
+
+    def test_Test_formatHex_2(self):
+        data = '\x00\x01\x02\x03\xFF'
+        self.assertEqual(pUtils.formatHex(data),'00 01 02 03 FF')
+
+
+
 
 if __name__ == '__main__':
     import inspect

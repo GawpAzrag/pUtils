@@ -176,3 +176,9 @@ def replaceStrings(string,**kwargs):
     for i,j in kwargs.iteritems():
         string = string.replace(i,j)
     return string
+
+def formatHex(data):
+    data = bytearray(data)
+    return ' '.join(['%02X' % byte for byte in data])
+
+
