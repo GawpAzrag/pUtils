@@ -1,0 +1,10 @@
+pUtils
+======
+
+Python utility library for common actions
+
+
+To install:
+
+ python setup.py install
+ 
