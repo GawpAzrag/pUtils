@@ -117,11 +117,11 @@ class Test_fileOperations(unittest.TestCase):
 
         self.assertEqual(pUtils.getFileSha1(os.path.join(testDirFullPath,'hw.py')),'a849bee4b303051f907d64b6c461ee6c699c3e79')
         
-        pUtils.pSlice(os.path.join(testDirFullPath,'hw.py'),1)
+        pUtils.pSlice(os.path.join(testDirFullPath,'hw.py'),testDirFullPath,1)
         self.assertEqual(len(pUtils.filterListByRegex(os.listdir(testDirFullPath),r'hw\.py\.[0-9]+')),21)
         os.remove(os.path.join(testDirFullPath,'hw.py'))
         self.assertEqual(os.path.exists(os.path.join(testDirFullPath,'hw.py')),False)
-        pUtils.pUnSlice(os.path.join(testDirFullPath,'hw.py.0'))
+        pUtils.pUnSlice(os.path.join(testDirFullPath,'hw.py.0'),os.path.join(testDirFullPath,'hw.py'))
         self.assertEqual(os.path.exists(os.path.join(testDirFullPath,'hw.py')),True)
         self.assertEqual(pUtils.quickFileRead(os.path.join(testDirFullPath,'hw.py')),string)
         

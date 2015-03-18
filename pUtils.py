@@ -40,7 +40,7 @@ def quickFileRead(fileFullPath,mode='rt'):
 
 def quickFileWrite(fileFullPath,data,mode='wt'):
     dirFullPath = os.path.dirname(fileFullPath)
-    if dirFullPath!='': createDirectory(dirFullPath)
+    createDirectory(dirFullPath)
     with open(fileFullPath,mode) as outFile:
         outFile.write(data)
 
@@ -93,25 +93,29 @@ def getFileSha1(fileNameFullPath):
     hexStringSha1 = sha1Obj.hexdigest()   
     return hexStringSha1
 
-def pSlice(inFileNameFullPath,sliceSize):
-    base = inFileNameFullPath
+def pSlice(inFileFullPath,outDirectoryFullPath,sliceSize):
+    base = inFileFullPath
     counter = 0
-    with open(inFileNameFullPath,'rb') as inFile:
+    with open(inFileFullPath,'rb') as inFile:
         while True:
             data = inFile.read(sliceSize)
             if not data: break
             counter += 1
-            quickFileWrite(base+'.'+str(counter),data,'wb')
+            fileFullPath = os.path.join(outDirectoryFullPath,base+'.'+str(counter))
+            quickFileWrite(fileFullPath,data,'wb')
     referenceData = {}
     referenceData['sliceAmount'] = counter
-    quickFileWrite(base+'.'+'0',json.dumps(referenceData))
+    fileFullPath = os.path.join(outDirectoryFullPath,base+'.'+'0')
+    quickFileWrite(fileFullPath,json.dumps(referenceData))
     return counter
 
-def pUnSlice(inFileNameFullPath):
-    base = '.'.join(inFileNameFullPath.split('.')[:-1])
+def pUnSlice(inFileFullPath,outFileFullPath):
+    base = '.'.join(inFileFullPath.split('.')[:-1])
     referenceData = json.loads(quickFileRead(base+'.0'))
     sliceAmount = referenceData['sliceAmount']
-    with open (base,'wb') as outFile:
+    
+    createDirectory(os.path.dirname(outFileFullPath))
+    with open (outFileFullPath,'wb') as outFile:
         for i in range(1,sliceAmount+1):
             data = quickFileRead(base+'.'+str(i),'rb')
             outFile.write(data)
@@ -146,6 +150,7 @@ def pUnpack(package):
     return zlib.decompress(base64.b64decode(package))
 
 def createDirectory(path):
+    if path=='': return 2
     if os.path.exists(path)!=True:
         os.makedirs(path)
         return 0
