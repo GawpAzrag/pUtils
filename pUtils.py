@@ -94,18 +94,18 @@ def getFileSha1(fileNameFullPath):
     return hexStringSha1
 
 def pSlice(inFileFullPath,outDirectoryFullPath,sliceSize):
-    base = inFileFullPath
+    fileName = os.path.basename(inFileFullPath)
     counter = 0
     with open(inFileFullPath,'rb') as inFile:
         while True:
             data = inFile.read(sliceSize)
             if not data: break
             counter += 1
-            fileFullPath = os.path.join(outDirectoryFullPath,base+'.'+str(counter))
+            fileFullPath = os.path.join(outDirectoryFullPath,fileName+'.'+str(counter))
             quickFileWrite(fileFullPath,data,'wb')
     referenceData = {}
     referenceData['sliceAmount'] = counter
-    fileFullPath = os.path.join(outDirectoryFullPath,base+'.'+'0')
+    fileFullPath = os.path.join(outDirectoryFullPath,fileName+'.'+'0')
     quickFileWrite(fileFullPath,json.dumps(referenceData))
     return counter
 
