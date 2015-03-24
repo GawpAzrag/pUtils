@@ -94,7 +94,15 @@ def getFileSha1(fileNameFullPath):
     return hexStringSha1
 
 def pSlice(inFileFullPath,outDirectoryFullPath,sliceSize):
+    
+    referenceData = {}
+    checksumDict = {}
+    referenceData['checksumDict'] = checksumDict
+    
     fileName = os.path.basename(inFileFullPath)
+    
+    checksumDict[fileName] = getFileSha1(inFileFullPath)
+    
     counter = 0
     with open(inFileFullPath,'rb') as inFile:
         while True:
@@ -103,11 +111,14 @@ def pSlice(inFileFullPath,outDirectoryFullPath,sliceSize):
             counter += 1
             fileFullPath = os.path.join(outDirectoryFullPath,fileName+'.'+str(counter))
             quickFileWrite(fileFullPath,data,'wb')
-    referenceData = {}
+            checksumDict[os.path.basename(fileFullPath)] = getFileSha1(fileFullPath)
+            
     referenceData['sliceAmount'] = counter
     fileFullPath = os.path.join(outDirectoryFullPath,fileName+'.'+'0')
     quickFileWrite(fileFullPath,json.dumps(referenceData))
-    return counter
+    
+    return {'retCode':0,'errMsg':None}
+
 
 def pUnSlice(inFileFullPath,outFileFullPath):
     base = '.'.join(inFileFullPath.split('.')[:-1])
@@ -119,6 +130,12 @@ def pUnSlice(inFileFullPath,outFileFullPath):
         for i in range(1,sliceAmount+1):
             data = quickFileRead(base+'.'+str(i),'rb')
             outFile.write(data)
+    
+    if getFileSha1(outFileFullPath)!=referenceData['checksumDict'][os.path.basename(inFileFullPath[:-2])]:
+        return {'retCode':1,'errMsg':'Checksum for whole file failed'}
+    
+    return {'retCode':0,'errMsg':None}
+    
 
 def createZipFile(rootPath,inFileRelativePathList,outFileNameFullPath):
     theZipFile = zipfile.ZipFile(outFileNameFullPath,'w',zipfile.ZIP_DEFLATED)
