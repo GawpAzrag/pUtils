@@ -34,13 +34,41 @@ import hashlib
 from datetime import datetime
 
 def quickFileRead(fileFullPath,mode='rt'):
-    with open(fileFullPath,mode) as inFile:
+
+    modeTmp = mode
+
+    if (mode=='json' or 
+        mode=='csv' or
+        mode=='txt'):
+
+        modeTmp = 'rt'
+
+    with open(fileFullPath,modeTmp) as inFile:
         data = inFile.read()
+
+    if mode=='json':
+        data = json.loads(data)
+    elif mode=='csv':
+        data = [row.split(',') for row in data.split('\n') if row!=''] 
+    elif mode=='txt':
+        data = data.split('\n')
+    
     return data
 
 def quickFileWrite(fileFullPath,data,mode='wt'):
     dirFullPath = os.path.dirname(fileFullPath)
     createDirectory(dirFullPath)
+
+    if mode=='json':
+        data = json.dumps(data,indent=4)
+        mode = 'wt'
+    elif mode=='csv':
+        data = '\n'.join([','.join([str(item) for item in row]) for row in data])
+        mode = 'wt'
+    elif mode=='txt':
+        data = '\n'.join([str(item) for item in data])
+        mode = 'wt'
+    
     with open(fileFullPath,mode) as outFile:
         outFile.write(data)
 
