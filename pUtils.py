@@ -60,7 +60,7 @@ def quickFileWrite(fileFullPath,data,mode='wt'):
     createDirectory(dirFullPath)
 
     if mode=='json':
-        data = json.dumps(data,indent=4)
+        data = json.dumps(data,indent=4,sort_keys=True)
         mode = 'wt'
     elif mode=='csv':
         data = '\n'.join([','.join([str(item) for item in row]) for row in data])
