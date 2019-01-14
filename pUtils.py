@@ -51,7 +51,7 @@ def quickFileRead(fileFullPath,mode='rt'):
     elif mode=='csv':
         data = [row.split(',') for row in data.split('\n') if row!=''] 
     elif mode=='txt':
-        data = data.split('\n')
+        data = [item for item in data.split('\n') if item!='']
     
     return data
 
